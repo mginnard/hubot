@@ -8,8 +8,8 @@ var zipcodePattern = /weather [0-9]{5}/;
 
 module.exports = function(robot) {
     robot.respond(zipcodePattern, function(msg) {
-        var zipcode = new RegExp(zipcodePattern);
-        return console.log(zipcode.toString());
-        msg.reply("Here's the weather for zipcode");
+        var zipcode = zipcodePattern.exec(msg);
+        console.log(zipcode);
+        msg.reply(zipcode);
     });
 };
