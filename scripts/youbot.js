@@ -2,9 +2,11 @@
 // hubot healthcheck - Let's you know if hubot is operational.
 // hubot get quote - Provides a motivational quote from an array of pre-defined quotes, because we all need a little boost sometimes.
 // hubot add quote <quote>  - Adds a quote to the array.
+// hubot get weather <zipcode>  - Adds a quote to the array.
 var healthcheckPattern = /healthcheck/i;
 var getQuotePattern = /get quote|inspire me/;
 var addQuotePattern = /add quote .*/;
+var zipcodePattern = /get weather [0-9]{5}/;
 
 // Seed hubot with motivational quotes.
 var quotes = [
@@ -25,6 +27,7 @@ function toTitleCase(name) {
 // Return a motivational quote from an array when given 
 // the "give me a quote" or "inspire me" command.
 module.exports = function(robot) {
+
     robot.respond(healthcheckPattern, function(msg) {
         // Pass the robot name in to toTitleCase and assign the result to a variable.
         var robotName = toTitleCase(robot.name);
@@ -35,16 +38,17 @@ module.exports = function(robot) {
             " get weather <zipcode>` to get the weather."
         );
     });
+
     robot.respond(getQuotePattern, function(msg) {
         // Pull a random quote from the quotes array.
         // Note: Because the quote should be random, we need 
         // to re-assign randomQuote every time the command is run, 
         // therefore this goes inside the .respond() method.
         var randomQuote = quotes[Math.floor(Math.random()*quotes.length)];
-        // Pass the random quote into the reply.
+        // Construct the reply with a random quote.
         msg.reply(randomQuote);
     });
-    // Establish a pattern to match the quote command.
+
     robot.respond(addQuotePattern, function(msg) {
         var newQuote = addQuotePattern.match(msg);
         console.log("msg is " + msg);
@@ -52,13 +56,19 @@ module.exports = function(robot) {
         quotes.push(newQuote); // This pushes the passed in parameter to the quote array.
         console.log(quotes);
     });
-    // Open Weather API: http://openweathermap.org/current
+
+    // Gets the Uses the Open Weather API: http://openweathermap.org/current
     // Example Request for 94114 zip code: http://api.openweathermap.org/data/2.5/weather?zip=94114&APPID=86fb953a79eb4050f91fe514981d02e0
     // API KEY: 86fb953a79eb4050f91fe514981d02e0
-    // Set up a function that takes a zip code and fetches the current weather.
-    var zipcodePattern = /get weather [0-9]{5}/;
     robot.respond(zipcodePattern, function(msg) {
-        console.log(msg);
-        msg.reply("Hm.");
+        var str = msg.message.text; // Take the message text and make it a variable.
+        var msgArray = str.split(" "); // Split that message text into an array.
+        var weatherZip = msgArray[3]; // Take the 4th index of the msgArray (which should be the zip) and turn it into a variable
+        var weatherURL = "http://api.openweathermap.org/data/2.5/weather?zip=";
+        var weatherToken = "&APPID=86fb953a79eb4050f91fe514981d02e0";
+        // Construct the url to see the weather and send it with the reply.
+        msg.reply("Here's the weather for " + weatherZip + ": " + weatherURL + weatherZip + weatherToken);
+        msg.reply("But don't forget: no matter the weather, it's always sunny somewhere!");
     });
+    
 };
