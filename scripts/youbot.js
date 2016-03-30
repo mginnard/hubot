@@ -1,89 +1,144 @@
-// Available commands for youbot:
-// healthcheck - Let's you know if hubot is operational and lets you know which commands are available.
-// get quote - Provides a motivational quote from an array of pre-defined quotes, because we all need a little boost sometimes.
-// add quote <quote>  - Adds a quote to the array.
-// get weather <zipcode>  - Adds a quote to the array.
-// Do we have class today? - Let's you know which day it is and whether or not class is scheduled.
+// Description:
+//   Youbot the hubot - A hubot bot that's concerned about you, and provides motivation and encouragement.
+//
+// Dependencies:
+//   slack adapter
+//
+// Primary Commands:
+//   hubot get commands - Let's you know if hubot is operational and lets you know which commands are available.
+//   hubot get quote - Provides a motivational quote from an array of pre-defined quotes, because we all need a little boost sometimes.
+//   hubot add quote "<quote>" - Adds a quote to the array.
+//   hubot cheer me up - Show me a cat.
 
-// Set up regex patterns for each command:
-var healthcheckPattern = /healthcheck/i;
-var getQuotePattern = /get quote|inspire me/;
-var addQuotePattern = /add quote .*/;
-var zipcodePattern = /get weather [0-9]{5}/;
-var dayPattern = /do we have class today?/i;
+// Additional Commands: 
+//   hubot get weather <zipcode> - Gets the weather for the 5-digit zipcode provided.
+//   hubot Do we have class today? - Let's you know which day it is and whether or not class is scheduled.
 
-// Seed hubot with motivational quotes.
-var quotes = [
-    "Everything is going to be 200 OK.",
-    "You look nice today!",
-    "The sound of typing makes me happy.",
-    "You did well today! Did you know that?"
-];
-
-// Function that takes a string and capitalize the first letter of every word.
-// Used to capitalize the robot name for healthcheck command.
-function toTitleCase(name) {
-    return name.replace(/\w\S*/g, function(txt) {
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-    });
-};
-
-// Return a motivational quote from an array when given 
-// the "give me a quote" or "inspire me" command.
 module.exports = function(robot) {
 
-    // If the "healthcheck" command is given, respond with the 
+    // Function that takes a string and capitalize the first letter of every word.
+    // Used to capitalize the robot name for healthcheck command.
+    function toTitleCase(name) {
+        return name.replace(/\w\S*/g, function(txt) {
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        });
+    };
+
+    // If the "get commands" command is given, respond with the available commands.
+    var healthcheckPattern = /get commands/i;
     robot.respond(healthcheckPattern, function(msg) {
         // Pass the robot name in to toTitleCase and assign the result to a variable.
         var robotName = toTitleCase(robot.name);
         msg.reply(
-            "Hello! I am " + robotName + " and everything is going to be 200 OK. Try `" 
-            + robot.name + " get quote` to brighten your day, `" + robot.name + 
-            " add quote` to add a new quote, or `" + robot.name + 
-            " get weather <zipcode>` to get the weather."
+            "Hello! I am " + robotName + " Available commands:\n`@" + robot.name + 
+            " get quote` or `inspire me` to brighten your day.\n`@" + robot.name + 
+            " add quote \"<quote>\"` to add a new quote.\n`@" + robot.name + 
+            " cheer me up` to get a picture that'll make you happy. \n`@" + robot.name + 
+            " get weather <zipcode>` to get the weather.\n`@" + robot.name +
+            " do we have class today?` to find out whether or not it's a class day."
         );
     });
 
-    // If the "get quote" command is given, respond with one of the 
+    // Seed youbot with motivational quotes.
+    var quotes = [
+        "Everything is going to be 200 OK.",
+        "You look nice today!",
+        "The sound of typing makes me happy.",
+        "You did well today! Did you know that?",
+        "You yourself, as much as anybody in the entire universe, deserve your love and affection."
+    ];
+
+    // If the "get quote" or "inspire me" command is given, respond with one of the 
     // motivational quotes in the quotes array.
+    var getQuotePattern = /get quote|inspire me/;
     robot.respond(getQuotePattern, function(msg) {
-        // Pull a random quote from the quotes array.
-        // Note: Because the quote should be random, we need 
-        // to re-assign randomQuote every time the command is run, 
-        // therefore this goes inside the .respond() method.
-        var randomQuote = quotes[Math.floor(Math.random()*quotes.length)];
-        // Construct the reply with a random quote.
-        msg.reply(randomQuote);
+        console.log(msg);
+        var randomQuote = quotes[Math.floor(Math.random()*quotes.length)]; // Get a random quote.
+        msg.reply(randomQuote); // Construct the reply with a random quote.
     });
 
-    // // If the "add quote <quote>" command is given, add the quote to the 
-    // // quotes array so it's an additional index to choose from when 
-    // // the "get quote" command is given.
-    // robot.respond(addQuotePattern, function(msg) {
-    //     var newQuote = addQuotePattern.match(msg);
-    //     console.log("msg is " + msg);
-    //     console.log("newQuote is " + newQuote);
-    //     quotes.push(newQuote); // This pushes the passed in parameter to the quote array.
-    //     console.log(quotes);
-    // });
+    // If the "add quote <quote>" command is given, add the quote to the 
+    // quotes array so it's an additional index to choose from when 
+    // the "get quote" command is given.
+    var addQuotePattern = /add quote ("|“)([^"“”]+)("|”)$/i;
+    robot.respond(addQuotePattern, function(msg) {
+        var newQuote = msg.match[2];
+        quotes.push(newQuote); // This pushes the new quote parameter to the quote array.
+        msg.reply("Quote added, nice work! Here it is: " + newQuote);
+    });
+
+    // Debugging command, "all quotes". 
+    // Allows you to print the entire array of quotes.
+    robot.respond(/all quotes/, function(msg) {
+        msg.reply(quotes);
+    });
 
     // If the "get weather <zip>" command is given, construct a weather URL
     // with the given 5 digit zipcode and reply with the weather.com URL.
     // Also respond with a little motivational message.
+    //      "The old way"
+    //      var zipcodePattern = /get weather [0-9]{5}/;
+    //      robot.respond(zipcodePattern, function(msg) {
+    //          console.log(msg);
+    //          var str = msg.message.text; // Take the message text and make it a variable.
+    //         var msgArray = str.split(" "); // Split that message text into an array.
+    //         var weatherZip = msgArray[3]; // Take the 4th index of the msgArray (which should be the zip) and turn it into a variable
+    //         var weatherURL = "https://weather.com/weather/today/l/";
+    //         // Construct the url to see the weather and send it with the reply.
+    //         msg.reply("Here's the weather for " + weatherZip + ": " + weatherURL + weatherZip);
+    //         msg.reply("But don't forget: no matter the weather, it's always sunny somewhere!");
+    //     });
+
+    // If the "get weather <zip>" command is given, construct a weather URL
+    // with the given 5 digit zipcode and reply with the current conditions URL.
+    // Also respond with a little motivational message.
+    // "The refactored way"
+
+    // var zipcodePattern = /get weather (\d+)$/i; // Removed the $ from this, so it will also take 9 digit zip codes, and only use the first 5 digits.
+    var zipcodePattern = /get weather (\d+)/i;
     robot.respond(zipcodePattern, function(msg) {
-        var str = msg.message.text; // Take the message text and make it a variable.
-        var msgArray = str.split(" "); // Split that message text into an array.
-        var weatherZip = msgArray[3]; // Take the 4th index of the msgArray (which should be the zip) and turn it into a variable
-        var weatherURL = "https://weather.com/weather/today/l/";
-        // Construct the url to see the weather and send it with the reply.
-        msg.reply("Here's the weather for " + weatherZip + ": " + weatherURL + weatherZip);
-        msg.reply("But don't forget: no matter the weather, it's always sunny somewhere!");
+        var baseURL, authToken, conditionsPath, zip, format;
+        baseURL = "http://api.wunderground.com/api/";
+        authToken = "501236368af9d0b8";
+        conditionsPath = "/conditions/q/";
+        zip = msg.match[1];
+        format = ".json";
+        return msg.http(baseURL + authToken + conditionsPath + zip + format).get()(function(err, res, body) {
+            var locationName = JSON.parse(body).current_observation.display_location.full;
+            var locationConditions = JSON.parse(body).current_observation.weather;
+            var locationURL = JSON.parse(body).current_observation.forecast_url;
+            if (locationConditions === "Clear") {
+                return msg.send(
+                    "It's currently *" + locationConditions + "* in " + locationName + 
+                    ". Enjoy the sun! If you want more information: " + locationURL
+                );
+            } else if (locationConditions === "Partly Cloudy") {
+                return msg.send(
+                    "It's currently *" + locationConditions + "* in " + locationName + 
+                    ". There is *some* sun out there, but if you want more information: " + locationURL
+                ); 
+            } else {
+                return msg.send(
+                    "It's currently *" + locationConditions + "* in " + locationName + 
+                    ". There's always sun, somewhere! Need more information? " + locationURL
+                );
+            }
+        });
+    });
+
+    // When given the command "cheer me up", get a picture of a cat.
+    var catPattern = /cheer me up/i;
+    robot.respond(catPattern, function(msg) {
+        return msg.http("http://random.cat/meow").get()(function(err, res, body) {
+            return msg.send(JSON.parse(body).file);
+        });
     });
 
     // If the question is asked, check which day it is.
     // If it's Monday or Wednesday, reply with the day
     // and confirm that it's a class day. If it's any other day,
     // reply with the day and confirm that there's no class.
+    var dayPattern = /do we have class today?/i;
     robot.respond(dayPattern, function(msg) {
         // Get the exact date and time.
         var day = new Date();

@@ -1,7 +1,24 @@
-# hubot
+### youbot the hubot
+
+A hubot / slackbot designed to provide you with motivational quotes, pictures of cats. Also provides you with the weather for any given zipcode, and can check whether it's a JS class day.
+
+#### Available Commands
+
+Primary Commands:
+
+    hubot> hubot get commands - Lets you know if hubot is operational which commands are available.
+    hubot> hubot get quote - Provides a motivational quote from an array of pre-defined quotes, because we all need a little boost sometimes.
+    hubot> hubot add quote "<quote>" - Adds a quote to the array for later use
+    hubot> hubot cheer me up - Show me a cat.
+
+Additional Commands: 
+    
+    hubot> hubot get weather <zipcode> - Gets the weather for the 5-digit zipcode provided.
+    hubot> hubot Do we have class today? - Let's you know which day it is and whether or not class is scheduled.
+    hubot> hubot help - All available commands that 
 
 
-### Running hubot Locally
+#### Running hubot Locally
 
 You can test your hubot by running the following, however some plugins will not
 behave as expected unless the [environment variables](#configuration) they rely
@@ -11,44 +28,11 @@ You can start hubot locally by running:
 
     % bin/hubot
 
-You'll see some start up output and a prompt:
+You can start hubot with Slack by running:
 
-    [Sat Feb 28 2015 12:38:27 GMT+0000 (GMT)] INFO Using default redis on localhost:6379
-    hubot>
+    % $ HUBOT_SLACK_TOKEN=<your_token_here> ./bin/hubot --adapter slack
 
-Then you can interact with hubot by typing `hubot help`.
 
-    hubot> hubot help
-    hubot animate me <query> - The same thing as `image me`, except adds [snip]
-    hubot help - Displays all of the help commands that hubot knows about.
-    ...
+#### Getting Started with Hubot
 
-### Configuration
-
-A few scripts (including some installed by default) require environment
-variables to be set as a simple form of configuration.
-
-Each script should have a commented header which contains a "Configuration"
-section that explains which values it requires to be placed in which variable.
-When you have lots of scripts installed this process can be quite labour
-intensive. The following shell command can be used as a stop gap until an
-easier way to do this has been implemented.
-
-    grep -o 'hubot-[a-z0-9_-]\+' external-scripts.json | \
-      xargs -n1 -I {} sh -c 'sed -n "/^# Configuration/,/^#$/ s/^/{} /p" \
-          $(find node_modules/{}/ -name "*.coffee")' | \
-        awk -F '#' '{ printf "%-25s %s\n", $1, $2 }'
-
-How to set environment variables will be specific to your operating system.
-Rather than recreate the various methods and best practices in achieving this,
-it's suggested that you search for a dedicated guide focused on your OS.
-
-### Scripting
-
-An example script is included at `scripts/example.coffee`, so check it out to
-get started, along with the [Scripting Guide](scripting-docs).
-
-For many common tasks, there's a good chance someone has already one to do just
-the thing.
-
-[scripting-docs]: https://github.com/github/hubot/blob/master/docs/scripting.md
+Need help getting up and running with hubot? Start with the [GitHub Hubot Documentation](https://github.com/github/hubot/).
