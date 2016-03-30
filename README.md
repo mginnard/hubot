@@ -15,7 +15,7 @@ Additional Commands:
     
 - `hubot> hubot get weather <zipcode>` - Gets the weather for the 5-digit zipcode provided.
 - `hubot> hubot do we have class today?` - Let's you know which day it is and whether or not class is scheduled.
-- `hubot> hubot help` - All commands that hubot knows about.
+- `hubot> hubot help` - All core commands that hubot knows about.
 
 
 #### Running hubot Locally
