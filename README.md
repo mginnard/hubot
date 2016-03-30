@@ -6,16 +6,16 @@ A hubot / slackbot designed to provide you with motivational quotes, pictures of
 
 Primary Commands:
 
-    hubot> hubot get commands - Lets you know if hubot is operational which commands are available.
-    hubot> hubot get quote - Provides a motivational quote from an array of pre-defined quotes, because we all need a little boost sometimes.
-    hubot> hubot add quote "<quote>" - Adds a quote to the array for later use
-    hubot> hubot cheer me up - Show me a cat.
+`hubot> hubot get commands` - Lets you know if hubot is operational which commands are available.
+`hubot> hubot get quote` - Provides a motivational quote from an array of pre-defined quotes, because we all need a little boost sometimes.
+`hubot> hubot add quote "<quote>"` - Adds a quote to the array for later use
+`hubot> hubot cheer me up` - Show me a cat.
 
 Additional Commands: 
     
-    hubot> hubot get weather <zipcode> - Gets the weather for the 5-digit zipcode provided.
-    hubot> hubot Do we have class today? - Let's you know which day it is and whether or not class is scheduled.
-    hubot> hubot help - All available commands that 
+`hubot> hubot get weather <zipcode>` - Gets the weather for the 5-digit zipcode provided.
+`hubot> hubot Do we have class today?` - Let's you know which day it is and whether or not class is scheduled.
+`hubot> hubot help` - All available commands that 
 
 
 #### Running hubot Locally
