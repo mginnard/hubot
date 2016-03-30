@@ -64,11 +64,10 @@ module.exports = function(robot) {
         var str = msg.message.text; // Take the message text and make it a variable.
         var msgArray = str.split(" "); // Split that message text into an array.
         var weatherZip = msgArray[3]; // Take the 4th index of the msgArray (which should be the zip) and turn it into a variable
-        var weatherURL = "http://api.openweathermap.org/data/2.5/weather?zip=";
-        var weatherToken = "&APPID=86fb953a79eb4050f91fe514981d02e0";
+        var weatherURL = "https://weather.com/weather/today/l/";
         // Construct the url to see the weather and send it with the reply.
-        msg.reply("Here's the weather for " + weatherZip + ": " + weatherURL + weatherZip + weatherToken);
+        msg.reply("Here's the weather for " + weatherZip + ": " + weatherURL + weatherZip);
         msg.reply("But don't forget: no matter the weather, it's always sunny somewhere!");
     });
-    
+
 };
