@@ -52,7 +52,6 @@ module.exports = function(robot) {
     // motivational quotes in the quotes array.
     var getQuotePattern = /get quote|inspire me/;
     robot.respond(getQuotePattern, function(msg) {
-        console.log(msg);
         var randomQuote = quotes[Math.floor(Math.random()*quotes.length)]; // Get a random quote.
         msg.reply(randomQuote); // Construct the reply with a random quote.
     });
@@ -73,10 +72,9 @@ module.exports = function(robot) {
         msg.reply(quotes);
     });
 
-    // If the "get weather <zip>" command is given, construct a weather URL
+    // My first try: If the "get weather <zip>" command is given, construct a weather URL
     // with the given 5 digit zipcode and reply with the weather.com URL.
     // Also respond with a little motivational message.
-    //      "The old way"
     //      var zipcodePattern = /get weather [0-9]{5}/;
     //      robot.respond(zipcodePattern, function(msg) {
     //          console.log(msg);
@@ -88,25 +86,29 @@ module.exports = function(robot) {
     //         msg.reply("Here's the weather for " + weatherZip + ": " + weatherURL + weatherZip);
     //         msg.reply("But don't forget: no matter the weather, it's always sunny somewhere!");
     //     });
+    // This works, but it's not really what I wanted it be.
 
-    // If the "get weather <zip>" command is given, construct a weather URL
-    // with the given 5 digit zipcode and reply with the current conditions URL.
-    // Also respond with a little motivational message.
-    // "The refactored way"
-
-    // var zipcodePattern = /get weather (\d+)$/i; // Removed the $ from this, so it will also take 9 digit zip codes, and only use the first 5 digits.
+    // The better way: If the "get weather <zip>" command is given, extract local weather
+    // conditions via the Wunderground API, construct a weather URL with the given 
+    // 5 digit zipcode and reply with the current conditions URL.
+    
     var zipcodePattern = /get weather (\d+)/i;
     robot.respond(zipcodePattern, function(msg) {
+        
         var baseURL, authToken, conditionsPath, zip, format;
         baseURL = "http://api.wunderground.com/api/";
         authToken = "501236368af9d0b8";
         conditionsPath = "/conditions/q/";
         zip = msg.match[1];
         format = ".json";
+
         return msg.http(baseURL + authToken + conditionsPath + zip + format).get()(function(err, res, body) {
-            var locationName = JSON.parse(body).current_observation.display_location.full;
-            var locationConditions = JSON.parse(body).current_observation.weather;
-            var locationURL = JSON.parse(body).current_observation.forecast_url;
+
+            var data = JSON.parse(body)
+            var locationName = data.current_observation.display_location.full;
+            var locationConditions = data.current_observation.weather;
+            var locationURL = data.current_observation.forecast_url;
+            
             if (locationConditions === "Clear") {
                 return msg.send(
                     "It's currently *" + locationConditions + "* in " + locationName + 
@@ -138,7 +140,7 @@ module.exports = function(robot) {
     // If it's Monday or Wednesday, reply with the day
     // and confirm that it's a class day. If it's any other day,
     // reply with the day and confirm that there's no class.
-    var dayPattern = /do we have class today?/i;
+    var dayPattern = /do we have class today\?/i;
     robot.respond(dayPattern, function(msg) {
         // Get the exact date and time.
         var day = new Date();

@@ -11,16 +11,18 @@ Primary Commands:
 - `hubot> hubot add quote "<quote>"` - Adds a quote to the quotes array for later use.
 - `hubot> hubot cheer me up` - Show me a cat.
 
-Additional Commands: 
+Secondary Commands: 
     
 - `hubot> hubot get weather <zipcode>` - Gets the weather for the 5-digit zipcode provided.
 - `hubot> hubot do we have class today?` - Let's you know which day it is and whether or not class is scheduled.
 - `hubot> hubot help` - All core commands that hubot knows about.
 
 
-#### Running hubot Locally
+#### Getting Started & Running Hubot Locally
 
-You can test your hubot by running the following, however some plugins will not
+Need help getting up and running with hubot? Start with the [GitHub Hubot Documentation](https://github.com/github/hubot/).
+
+You can test hubot by running the following, however some plugins will not
 behave as expected unless the [environment variables](#configuration) they rely
 upon have been set.
 
