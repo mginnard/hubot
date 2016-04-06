@@ -72,23 +72,7 @@ module.exports = function(robot) {
         msg.reply(quotes);
     });
 
-    // My first try: If the "get weather <zip>" command is given, construct a weather URL
-    // with the given 5 digit zipcode and reply with the weather.com URL.
-    // Also respond with a little motivational message.
-    //      var zipcodePattern = /get weather [0-9]{5}/;
-    //      robot.respond(zipcodePattern, function(msg) {
-    //          console.log(msg);
-    //          var str = msg.message.text; // Take the message text and make it a variable.
-    //         var msgArray = str.split(" "); // Split that message text into an array.
-    //         var weatherZip = msgArray[3]; // Take the 4th index of the msgArray (which should be the zip) and turn it into a variable
-    //         var weatherURL = "https://weather.com/weather/today/l/";
-    //         // Construct the url to see the weather and send it with the reply.
-    //         msg.reply("Here's the weather for " + weatherZip + ": " + weatherURL + weatherZip);
-    //         msg.reply("But don't forget: no matter the weather, it's always sunny somewhere!");
-    //     });
-    // This works, but it's not really what I wanted it be.
-
-    // The better way: If the "get weather <zip>" command is given, extract local weather
+    // If the "get weather <zip>" command is given, extract local weather
     // conditions via the Wunderground API, construct a weather URL with the given 
     // 5 digit zipcode and reply with the current conditions URL.
     
